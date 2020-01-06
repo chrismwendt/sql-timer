@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <!--Load the AJAX API-->
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(init);
+      var data;
+
+      function init() {
+        data = new google.visualization.DataTable();
+        data.addColumn("number", "Distance");
+        // data.addColumn("number", "quadratic.sql");
+        // data.addColumn("number", "slow-linear.sql");
+        // data.addColumn("number", "fast-bounded.sql");
+        data.addColumn("number", "fast-linear.sql");
+        data.addColumn("number", "fast-linear-closest-dump.sql");
+        // data.addColumn("number", "fast-linear-row-number.sql");
+        // data.addColumn("number", "fast-linear-flood.sql");
+
+        var ws = new WebSocket("ws://localhost:8080/");
+
+        ws.onmessage = function(event) {
+            data.addRows([JSON.parse(event.data)]);
+
+          drawChart();
+        };
+
+        drawChart();
+      }
+
+      var drawChart = _.throttle(drawChartHeavy, 100);
+
+      function drawChartHeavy() {
+        var options = {
+          //   trendlines: {
+          //     0: {
+          //       type: "linear"
+          //     },
+          //     1: {
+          //       type: "linear"
+          //     }
+          //   },
+          vAxes: {
+            0: { title: "query ms" },
+            1: { title: "ratio of old/new" },
+            2: { title: "ratio of old/new" },
+            3: { title: "ratio of old/new" },
+            4: { title: "ratio of old/new" }
+          }
+        };
+
+        var chartLinear = new google.visualization.ScatterChart(
+          document.getElementById("chart_div")
+        );
+        view = new google.visualization.DataView(data);
+        // view.hideColumns([3]);
+        chartLinear.draw(view, options);
+      }
+
+      //create trigger to resizeEnd event
+      $(window).resize(drawChart);
+    </script>
+  </head>
+
+  <body>
+    <div id="chart_div" style="height:100%"></div>
+  </body>
+</html>
