@@ -6,9 +6,9 @@
 
 # Usage
 
-- Terminal 1 `http-server .`
-- Terminal 2 `websocketd --port=8080 tail -n +1 -f perf.txt`
-- Terminal 3 `./script.hs`
+- Terminal 3 `./script.hs` streams perf data to `perf.txt`
+- Terminal 2 `websocketd --port=8080 tail -n +1 -f perf.txt` reads `perf.txt` and streams to the browser via websockets
+- Terminal 1 `http-server .` serves index.html which reads data from perf.txt via websockets
 - Browser: http://localhost:8081/ (and refresh it whenever you kill/restart `./script.hs`)
 
 # perf.txt
