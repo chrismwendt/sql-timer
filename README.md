@@ -7,7 +7,7 @@
 # Usage
 
 - Terminal 1 `http-server .`
-- Terminal 2 `websocketd --port=8080 tail -n +1 -f data.txt`
+- Terminal 2 `websocketd --port=8080 tail -n +1 -f perf.txt`
 - Terminal 3 `./script.hs`
 - Browser: http://localhost:8081/ (and refresh it whenever you kill/restart `./script.hs`)
 
